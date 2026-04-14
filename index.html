@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DialCheck — Phone Number Verifier for Coaches</title>
+  <meta name="description" content="Verify any phone number instantly. Check line type, carrier, and risk before your next SMS campaign or outreach. Free for up to 50 numbers." />
+  <meta property="og:title" content="DialCheck — Phone Number Verifier for Coaches" />
+  <meta property="og:description" content="Know who's worth calling before you dial. Free for up to 50 numbers." />
+  <meta property="og:url" content="https://dialcheck.scaleupsalesfunnels.com" />
+  <meta property="og:type" content="website" />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/hero.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="https://www.scaleupsalesfunnels.com" class="nav-brand" target="_blank">
+    <svg class="nav-logo" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="44" height="44" rx="10" fill="#0a0f1e"/>
+      <path d="M22 6 L36 12 L36 24 C36 33 22 40 22 40 C22 40 8 33 8 24 L8 12 Z"
+            fill="#3b82f6" fill-opacity="0.2" stroke="#60a5fa" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M17 22 L20 26 L27 17" stroke="#60a5fa" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span class="nav-name">ScaleUp<span>Funnels</span></span>
+  </a>
+  <div class="nav-right">
+    <a href="https://launchready.scaleupsalesfunnels.com" class="nav-link" target="_blank">Email verifier</a>
+    <a href="https://www.scaleupsalesfunnels.com" class="nav-cta" target="_blank">Need a funnel? →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">
+    <span class="hero-eyebrow-dot"></span>
+    Free Phone Number Verifier for Coaches
+  </div>
+  <h1>Know who's worth<br><span class="gradient">calling before you dial</span></h1>
+  <p class="hero-sub">
+    Dead numbers, VoIP lines, and disconnected phones waste your time and hurt your SMS deliverability.
+    DialCheck tells you exactly what's on your list — in seconds.
+  </p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <strong>2 APIs</strong>
+      <span>dual verification</span>
+    </div>
+    <div class="hero-stat">
+      <strong>50</strong>
+      <span>free checks</span>
+    </div>
+    <div class="hero-stat">
+      <strong>instant</strong>
+      <span>results</span>
+    </div>
+    <div class="hero-stat">
+      <strong>$0</strong>
+      <span>to get started</span>
+    </div>
+  </div>
+</div>
+
+<!-- TRUST BAND -->
+<div class="trust-band">
+  <div class="trust-item"><span class="trust-dot"></span>Line type detection</div>
+  <div class="trust-item"><span class="trust-dot"></span>Carrier identification</div>
+  <div class="trust-item"><span class="trust-dot"></span>Risk scoring</div>
+  <div class="trust-item"><span class="trust-dot"></span>Country detection</div>
+</div>
+
+<!-- MAIN CARD -->
+<div class="container">
+  <div class="card">
+
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('single')">Single number</button>
+      <button class="tab" onclick="switchTab('bulk')">Bulk upload</button>
+    </div>
+
+    <!-- SINGLE PANEL -->
+    <div class="panel active" id="panel-single">
+      <label class="field-label">Enter a phone number</label>
+      <div class="input-wrap">
+        <span class="input-icon">📞</span>
+        <input type="tel" id="phone" placeholder="+1 415 555 0123 (include country code)" />
+      </div>
+      <div id="usage-counter-single" class="usage-counter"></div>
+      <button class="btn-primary" id="btn-single" onclick="startSingle()">
+        Check this number
+      </button>
+      <div class="status" id="status-single"></div>
+    </div>
+
+    <!-- BULK PANEL -->
+    <div class="panel" id="panel-bulk">
+      <div class="limit-notice">
+        <span>Free plan: up to <strong>50 numbers</strong></span>
+        <a href="#" id="pro-link-notice" target="_blank">Need more? Get Pro — $37 →</a>
+      </div>
+      <div id="usage-counter" class="usage-counter"></div>
+      <label class="field-label">Upload your list (.xlsx or .csv)</label>
+      <input type="file" id="file" accept=".xlsx,.csv,.xls" />
+      <button class="btn-primary" id="btn-bulk" onclick="startBulk()">
+        Verify my list
+      </button>
+      <div class="status" id="status-bulk"></div>
+    </div>
+
+    <!-- RESULTS AREA -->
+    <div id="results-area" class="results-area" style="display:none;">
+      <div class="results-header">
+        <span class="results-title">Your results</span>
+        <span class="results-count" id="results-count"></span>
+      </div>
+
+      <!-- SUMMARY CARDS -->
+      <div class="summary-row">
+        <div class="summary-card s-ready">
+          <strong id="summary-ready">0</strong>
+          <span>Call ready</span>
+        </div>
+        <div class="summary-card s-verify">
+          <strong id="summary-verify">0</strong>
+          <span>Verify first</span>
+        </div>
+        <div class="summary-card s-dnc">
+          <strong id="summary-dnc">0</strong>
+          <span>Do not call</span>
+        </div>
+      </div>
+
+      <!-- LEGEND -->
+      <div class="legend">
+        <div class="legend-item"><span class="badge ready">Call ready</span> Safe to contact</div>
+        <div class="legend-item"><span class="badge verify">Verify first</span> Confirm before calling</div>
+        <div class="legend-item"><span class="badge dncall">Do not call</span> Remove from list</div>
+        <div class="legend-item"><span class="badge invalid">Invalid</span> Not a real number</div>
+      </div>
+
+      <!-- RESULTS TABLE -->
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Number</th>
+              <th>Status</th>
+              <th>Type</th>
+              <th>Carrier</th>
+              <th>Country</th>
+            </tr>
+          </thead>
+          <tbody id="result-body"></tbody>
+        </table>
+      </div>
+
+      <!-- DOWNLOAD BUTTONS -->
+      <div class="download-row">
+        <div class="download-top">
+          <button class="btn-secondary" onclick="downloadAll()">Download all results</button>
+          <button class="btn-secondary" onclick="downloadReady()">Download call ready</button>
+        </div>
+        <button class="btn-secondary highlight" onclick="downloadReadyAndVerify()">
+          Download call ready + verify first
+        </button>
+      </div>
+
+      <!-- UPGRADE BOX -->
+      <div class="upgrade-box" id="upgrade-box">
+        <h3>Your list has numbers to remove</h3>
+        <p>
+          <strong id="remove-count"></strong> numbers should be removed from your list.
+          Upgrade to Pro to verify your full list of up to 2,000 numbers and get a
+          clean, call-ready export within 24 hours.
+        </p>
+        <div class="upgrade-btns">
+          <a href="https://scaleupsalesfunnels.gumroad.com/l/dialcheck-pro"
+             class="btn-upgrade-pro" target="_blank">
+            Get DialCheck Pro — $37 one-time →
+          </a>
+          <a href="https://scaleupsalesfunnels.gumroad.com/l/dialcheck-bundle"
+             class="btn-upgrade-bundle" target="_blank">
+            Bundle with email verifier — $57 (save $7) →
+          </a>
+        </div>
+        <div class="upgrade-sub">
+          Up to 2,000 numbers · Results within 24 hours · One-time payment
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="how">
+  <div class="how-title">How it works</div>
+  <div class="how-steps">
+    <div class="how-step">
+      <div class="how-num">1</div>
+      <h4>Upload your list</h4>
+      <p>Enter a single number or upload a CSV / Excel file of up to 50 numbers free.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-num">2</div>
+      <h4>We verify every number</h4>
+      <p>Each number is checked for validity, line type, carrier, and risk signals.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-num">3</div>
+      <h4>Download your clean list</h4>
+      <p>Export only the call-ready numbers and start your campaign with confidence.</p>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="trust-footer">
+  <p>
+    Built by
+    <a href="https://www.scaleupsalesfunnels.com" target="_blank">ScaleUp Sales Funnels</a>
+    · Also try
+    <a href="https://launchready.scaleupsalesfunnels.com" target="_blank">LaunchReady</a>
+    — free email list cleaner
+  </p>
+  <p style="margin-top:8px;">
+    Questions?
+    <a href="mailto:contact@scaleupsalesfunnels.com">contact@scaleupsalesfunnels.com</a>
+  </p>
+</div>
+
+<!-- EMAIL GATE MODAL -->
+<div class="modal-backdrop" id="leadModal">
+  <div class="modal">
+    <h3>Enter your email to continue</h3>
+    <p>We use this to track your free usage across sessions. Up to 50 checks free — no card needed.</p>
+    <input type="email" id="userEmail" placeholder="Your best email address" />
+    <div class="modal-error" id="modal-error"></div>
+    <button class="btn-primary" id="unlockBtn" onclick="handleGate()">Continue →</button>
+    <div class="modal-note">No spam. Unsubscribe any time.</div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/verdict.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
+
+<script>
+  document.getElementById("pro-link-notice").href = CONFIG.GUMROAD_PRO;
+</script>
+
+</body>
+</html>
