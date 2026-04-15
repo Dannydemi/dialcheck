@@ -1,11 +1,9 @@
-// ── LIBPHONENUMBER — runs in browser, free, unlimited, 240+ countries ──
 function parseWithLibPhone(rawPhone) {
   try {
     const phoneUtil = libphonenumber.PhoneNumberUtil.getInstance();
     const PNF       = libphonenumber.PhoneNumberFormat;
     const PNT       = libphonenumber.PhoneNumberType;
 
-    // Try parsing as international first, then fallback to US
     let parsed;
     try {
       parsed = phoneUtil.parse(rawPhone, null);
@@ -17,35 +15,34 @@ function parseWithLibPhone(rawPhone) {
       return { valid: false, e164: rawPhone, type: "unknown", country: null };
     }
 
-    const typeNum   = phoneUtil.getNumberType(parsed);
-    const typeMap   = {
-      [PNT.MOBILE]:        "mobile",
-      [PNT.FIXED_LINE]:    "landline",
+    const typeNum = phoneUtil.getNumberType(parsed);
+    const typeMap = {
+      [PNT.MOBILE]:               "mobile",
+      [PNT.FIXED_LINE]:           "landline",
       [PNT.FIXED_LINE_OR_MOBILE]: "mobile",
-      [PNT.VOIP]:          "voip",
-      [PNT.TOLL_FREE]:     "toll_free",
-      [PNT.PREMIUM_RATE]:  "premium_rate",
-      [PNT.SHARED_COST]:   "shared_cost",
-      [PNT.UNKNOWN]:       "unknown"
+      [PNT.VOIP]:                 "voip",
+      [PNT.TOLL_FREE]:            "toll_free",
+      [PNT.PREMIUM_RATE]:         "premium_rate",
+      [PNT.SHARED_COST]:          "shared_cost",
+      [PNT.UNKNOWN]:              "unknown"
     };
 
-    const regionCode = phoneUtil.getRegionCodeForNumber(parsed);
+    const regionCode  = phoneUtil.getRegionCodeForNumber(parsed);
     const countryName = getCountryName(regionCode);
 
     return {
-      valid:     true,
-      e164:      phoneUtil.format(parsed, PNF.E164),
-      national:  phoneUtil.format(parsed, PNF.NATIONAL),
-      intl:      phoneUtil.format(parsed, PNF.INTERNATIONAL),
-      type:      typeMap[typeNum] || "unknown",
-      country:   { code: regionCode, name: countryName }
+      valid:    true,
+      e164:     phoneUtil.format(parsed, PNF.E164),
+      national: phoneUtil.format(parsed, PNF.NATIONAL),
+      intl:     phoneUtil.format(parsed, PNF.INTERNATIONAL),
+      type:     typeMap[typeNum] || "unknown",
+      country:  { code: regionCode, name: countryName }
     };
   } catch(e) {
     return { valid: false, e164: rawPhone, type: "unknown", country: null };
   }
 }
 
-// ── NUMVERIFY — adds carrier data ──
 async function getCarrierData(e164Number) {
   try {
     const clean = e164Number.replace("+", "");
@@ -58,7 +55,6 @@ async function getCarrierData(e164Number) {
   } catch(e) { return null; }
 }
 
-// ── COMBINED VERIFY ──
 async function verifyPhone(rawPhone) {
   const libResult = parseWithLibPhone(rawPhone.trim());
   if (!libResult.valid) {
@@ -77,7 +73,6 @@ async function verifyPhone(rawPhone) {
   };
 }
 
-// ── COUNTRY NAME LOOKUP ──
 function getCountryName(code) {
   const map = {
     US:"United States",GB:"United Kingdom",NG:"Nigeria",GH:"Ghana",KE:"Kenya",
@@ -99,19 +94,17 @@ function getCountryName(code) {
     DJ:"Djibouti",KM:"Comoros",MG:"Madagascar",HK:"Hong Kong",
     TW:"Taiwan",KR:"South Korea",MY:"Malaysia",TH:"Thailand",
     VN:"Vietnam",ID:"Indonesia",MM:"Myanmar",KH:"Cambodia",LA:"Laos",
-    ID:"Indonesia",NP:"Nepal",LK:"Sri Lanka",AF:"Afghanistan",IQ:"Iraq",
-    IR:"Iran",JO:"Jordan",LB:"Lebanon",SY:"Syria",YE:"Yemen",
-    KW:"Kuwait",QA:"Qatar",BH:"Bahrain",OM:"Oman",CO:"Colombia",
-    VE:"Venezuela",PE:"Peru",CL:"Chile",EC:"Ecuador",BO:"Bolivia",
-    PY:"Paraguay",UY:"Uruguay",GY:"Guyana",SR:"Suriname",TT:"Trinidad",
-    JM:"Jamaica",CU:"Cuba",DO:"Dominican Republic",HT:"Haiti",
-    GT:"Guatemala",HN:"Honduras",SV:"El Salvador",NI:"Nicaragua",
-    CR:"Costa Rica",PA:"Panama"
+    NP:"Nepal",LK:"Sri Lanka",AF:"Afghanistan",IQ:"Iraq",IR:"Iran",
+    JO:"Jordan",LB:"Lebanon",SY:"Syria",YE:"Yemen",KW:"Kuwait",
+    QA:"Qatar",BH:"Bahrain",OM:"Oman",CO:"Colombia",VE:"Venezuela",
+    PE:"Peru",CL:"Chile",EC:"Ecuador",BO:"Bolivia",PY:"Paraguay",
+    UY:"Uruguay",GY:"Guyana",SR:"Suriname",TT:"Trinidad",JM:"Jamaica",
+    CU:"Cuba",DO:"Dominican Republic",HT:"Haiti",GT:"Guatemala",
+    HN:"Honduras",SV:"El Salvador",NI:"Nicaragua",CR:"Costa Rica",PA:"Panama"
   };
   return map[code] || code || "Unknown";
 }
 
-// ── USAGE TRACKING ──
 async function checkUsageRemote(userEmail) {
   try {
     const url  = CONFIG.LEAD_URL + "?action=checkUsage&userEmail=" + encodeURIComponent(userEmail);

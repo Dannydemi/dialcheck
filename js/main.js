@@ -1,8 +1,8 @@
-let lastResults  = [];
+let lastResults    = [];
 let pendingNumbers = [];
-let sessionEmail = localStorage.getItem("dc_email") || "";
-let sessionUsage = parseInt(localStorage.getItem("dc_usage") || "0");
-let ownerActive  = isOwner(sessionEmail);
+let sessionEmail   = localStorage.getItem("dc_email") || "";
+let sessionUsage   = parseInt(localStorage.getItem("dc_usage") || "0");
+let ownerActive    = isOwner(sessionEmail);
 
 document.addEventListener("DOMContentLoaded", () => {
   renderCounter(sessionUsage, ownerActive);
@@ -19,7 +19,7 @@ function startSingle() {
 }
 
 function startBulk() {
-  const file   = document.getElementById("file").files[0];
+  const file = document.getElementById("file").files[0];
   if (!file) { setStatus("bulk", "Please select a file first."); return; }
   if (!ownerActive && sessionUsage >= CONFIG.FREE_LIMIT) {
     setStatus("bulk", "Free limit reached. Upgrade to Pro to check more numbers."); return;
@@ -68,7 +68,7 @@ async function handleGate() {
 
     const serverCount = await checkUsageRemote(userEmail);
     if (serverCount >= CONFIG.FREE_LIMIT) {
-      errEl.innerHTML = `You've used all ${CONFIG.FREE_LIMIT} free checks. <a href="${CONFIG.GUMROAD_PRO}" target="_blank">Get Pro for $37 →</a>`;
+      errEl.innerHTML = `You've used all ${CONFIG.FREE_LIMIT} free checks. <a href="${CONFIG.GUMROAD_PRO}" target="_blank" style="color:#60a5fa;font-weight:600">Get Pro for $37 →</a>`;
       setGateBtn("Continue →", false); return;
     }
 
@@ -80,7 +80,9 @@ async function handleGate() {
     closeGate();
     await runVerification(pendingNumbers, window._pendingType, userEmail, false);
 
-  } catch(err) { errEl.textContent = "Something went wrong. Please try again."; }
+  } catch(err) {
+    errEl.textContent = "Something went wrong. Please try again.";
+  }
 
   setGateBtn("Continue →", false);
 }
