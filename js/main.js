@@ -99,7 +99,7 @@ async function runVerification(numbers, type, userEmail, bypass) {
     setStatus(type, `Checking ${i + 1} of ${capped.length}…`);
     const raw     = await verifyPhone(capped[i].phone);
     const verdict = getVerdict(raw);
-    results.push({ phone: raw?._formatted || capped[i].phone, verdict, raw });
+    results.push({ phone: raw?.phone || capped[i].phone, verdict, raw });
     await new Promise(r => setTimeout(r, 400));
   }
 

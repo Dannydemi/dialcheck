@@ -3,59 +3,47 @@ function getVerdict(result) {
     return {
       label:    "Invalid",
       cls:      "invalid",
-      guidance: "Not a real number — remove from your list"
+      guidance: "Not a recognised number — check format or remove"
     };
   }
 
-  const type     = (result.type || "").toLowerCase();
-  const carrier  = result.carrier || "Unknown carrier";
-  const country  = result.country?.name || "";
-  const intl     = result.international_format || result.phone;
-  const local    = result.local_format || "";
+  const type = (result.type || "").toLowerCase();
 
   if (type === "voip") {
     return {
       label:    "Verify first",
       cls:      "verify",
-      guidance: `VoIP number (${carrier}) — may not ring a real person`
+      guidance: "VoIP number — may not reach a real person"
     };
   }
 
-  if (type === "mobile") {
-    return {
-      label:    "Call ready",
-      cls:      "ready",
-      guidance: `Mobile · ${carrier}${country ? " · " + country : ""}`
-    };
-  }
-
-  if (type === "landline") {
-    return {
-      label:    "Call ready",
-      cls:      "ready",
-      guidance: `Landline · ${carrier}${country ? " · " + country : ""}`
-    };
-  }
-
-  if (type === "premium_rate" || type === "toll_free") {
+  if (type === "toll_free" || type === "premium_rate" || type === "shared_cost") {
     return {
       label:    "Do not call",
       cls:      "dncall",
-      guidance: `${type === "toll_free" ? "Toll-free" : "Premium rate"} number — not a personal contact`
+      guidance: `${type === "toll_free" ? "Toll-free" : "Premium/shared"} line — not a personal contact`
+    };
+  }
+
+  if (type === "mobile" || type === "landline" || type === "fixed_line_or_mobile") {
+    return {
+      label:    "Call ready",
+      cls:      "ready",
+      guidance: `${type === "mobile" ? "Mobile" : "Landline"} · ${result.carrier || "carrier unknown"}${result.country?.name ? " · " + result.country.name : ""}`
     };
   }
 
   return {
     label:    "Verify first",
     cls:      "verify",
-    guidance: `Line type unclear (${type || "unknown"}) — verify before calling`
+    guidance: "Line type unclear — verify before adding to campaign"
   };
 }
 
 function getSummary(results) {
-  const ready  = results.filter(r => r.verdict.cls === "ready").length;
-  const verify = results.filter(r => r.verdict.cls === "verify").length;
-  const dnc    = results.filter(r => r.verdict.cls === "dncall").length;
-  const invalid= results.filter(r => r.verdict.cls === "invalid").length;
+  const ready   = results.filter(r => r.verdict.cls === "ready").length;
+  const verify  = results.filter(r => r.verdict.cls === "verify").length;
+  const dnc     = results.filter(r => r.verdict.cls === "dncall").length;
+  const invalid = results.filter(r => r.verdict.cls === "invalid").length;
   return { ready, verify, dnc, invalid, total: results.length };
 }
