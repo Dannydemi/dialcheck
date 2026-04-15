@@ -1,9 +1,26 @@
+// Load libphonenumber from CDN — formats any number to E.164 automatically
+function formatToE164(rawPhone, defaultCountry = "US") {
+  try {
+    const phoneUtil = libphonenumber.PhoneNumberUtil.getInstance();
+    const parsed    = phoneUtil.parse(rawPhone, defaultCountry);
+    if (phoneUtil.isValidNumber(parsed)) {
+      return phoneUtil.format(parsed, libphonenumber.PhoneNumberFormat.E164);
+    }
+    return rawPhone;
+  } catch(e) {
+    return rawPhone;
+  }
+}
+
 async function verifyPhone(phone) {
   try {
-    const url = `${CONFIG.ABSTRACT_URL}?api_key=${CONFIG.ABSTRACT_KEY}&phone=${encodeURIComponent(phone)}`;
+    const formatted = formatToE164(phone);
+    const url = `${CONFIG.ABSTRACT_URL}?api_key=${CONFIG.ABSTRACT_KEY}&phone=${encodeURIComponent(formatted)}`;
     const res  = await fetch(url);
     if (!res.ok) return null;
-    return await res.json();
+    const data = await res.json();
+    data._formatted = formatted;
+    return data;
   } catch(e) { return null; }
 }
 
